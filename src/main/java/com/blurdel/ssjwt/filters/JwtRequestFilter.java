@@ -23,7 +23,7 @@ import com.blurdel.ssjwt.util.JwtTokenUtil;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
-    private MyUserDetailsService userDetailsService;
+    private MyUserDetailsService myUserDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtUtil;
@@ -46,10 +46,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
+            	// Spring Security default token, managing authentication in the context of username/password
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 

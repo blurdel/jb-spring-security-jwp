@@ -6,12 +6,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blurdel.ssjwt.config.MyUserDetailsService;
 import com.blurdel.ssjwt.model.AuthenticationRequest;
 import com.blurdel.ssjwt.model.AuthenticationResponse;
 import com.blurdel.ssjwt.util.JwtTokenUtil;
@@ -24,7 +24,7 @@ public class HelloResource {
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private MyUserDetailsService myUserDetailsService;
 	
 	@Autowired
 	private JwtTokenUtil JwtTokenUtil;
@@ -60,7 +60,7 @@ public class HelloResource {
 			throw new Exception("Incorrect username or password", e);
 		}
 		
-		final UserDetails userDetails = userDetailsService
+		final UserDetails userDetails = myUserDetailsService
 				.loadUserByUsername(authRequest.getUsername());
 		
 		final String jwt = JwtTokenUtil.generateToken(userDetails);
